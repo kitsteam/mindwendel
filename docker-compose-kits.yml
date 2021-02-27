@@ -6,7 +6,6 @@ services:
     image: kits/mindwendel
     build:
       context: .
-      dockerfile: Dockerfile_Kits
       target: app
     environment:
       DATABASE_USER: postgres
@@ -15,7 +14,8 @@ services:
       DATABASE_PORT: 5432
       DATABASE_HOST: db
       URL_HOST: localhost
-      SECRET_KEY_BASE:
+      # IMPORTANT: Change the secret key base - see readme
+      SECRET_KEY_BASE: TODO_ENTER_SECRET
       MW_FEATURE_BRAINSTORMING_TEASER: "false"
     ports:
       - "80:4000"
