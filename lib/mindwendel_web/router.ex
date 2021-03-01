@@ -9,7 +9,6 @@ defmodule MindwendelWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Mindwendel.Plugs.SetSessionUserId
-    plug Mindwendel.Plugs.ContentSecurityPolicy
   end
 
   pipeline :api do
