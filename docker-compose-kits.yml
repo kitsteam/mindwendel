@@ -13,9 +13,11 @@ services:
       DATABASE_NAME: mindwendel
       DATABASE_PORT: 5432
       DATABASE_HOST: db
+      DATABASE_SSL: "true"
       URL_HOST: localhost
       # IMPORTANT: Change the secret key base - see readme
-      SECRET_KEY_BASE: TODO_ENTER_SECRET
+      SECRET_KEY_BASE:
+      MW_DEFAULT_LOCALE: de
       MW_FEATURE_BRAINSTORMING_TEASER: "false"
     ports:
       - "80:4000"
