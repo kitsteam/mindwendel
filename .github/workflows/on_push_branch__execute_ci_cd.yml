@@ -78,8 +78,14 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
+<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
+=======
+
+      # install hex:
+      - run: mix local.hex --force && mix local.rebar --force
+>>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
       - run: mix compile
       - run: mix ecto.create
       - run: mix ecto.migrate
@@ -100,9 +106,15 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
+<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
       
+=======
+
+      # install hex:
+      - run: mix local.hex --force && mix local.rebar --force
+>>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
       - run: mix format --check-formatted
   
   check_mix_gettext_extract_up_to_date:
@@ -133,14 +145,26 @@ jobs:
 
     steps:
       - name: Check out repository code
+<<<<<<< HEAD
         uses: actions/checkout@v3
         
       - uses: actions/cache@v3
+=======
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+>>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
         with:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
+<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
       - run: mix compile
+=======
+
+      # install hex:
+      - run: mix local.hex --force && mix local.rebar --force
+>>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
       - run: mix sobelow --config
