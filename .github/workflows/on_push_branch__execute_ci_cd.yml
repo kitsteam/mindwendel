@@ -28,7 +28,7 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
-      
+
       - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
         if: steps.cache.outputs.cache-hit != 'true'
@@ -79,10 +79,14 @@ jobs:
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
 <<<<<<< HEAD
+<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
 =======
 
+=======
+      
+>>>>>>> 93a074f (refactor: Cleanup afer rebase)
       # install hex:
       - run: mix local.hex --force && mix local.rebar --force
 >>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
@@ -107,11 +111,15 @@ jobs:
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
 <<<<<<< HEAD
+<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
       
 =======
 
+=======
+      
+>>>>>>> 93a074f (refactor: Cleanup afer rebase)
       # install hex:
       - run: mix local.hex --force && mix local.rebar --force
 >>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
@@ -151,7 +159,7 @@ jobs:
       - uses: actions/cache@v3
 =======
         uses: actions/checkout@v2
-
+        
       - uses: actions/cache@v2
 >>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
         with:
@@ -159,11 +167,15 @@ jobs:
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
 <<<<<<< HEAD
+<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
       - run: mix compile
 =======
 
+=======
+      
+>>>>>>> 93a074f (refactor: Cleanup afer rebase)
       # install hex:
       - run: mix local.hex --force && mix local.rebar --force
 >>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
