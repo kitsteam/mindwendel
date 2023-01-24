@@ -58,6 +58,7 @@ config :dart_sass,
     args: ~w(
       scss/app.scss:../priv/static/assets/app.css
       scss/kits.scss:../priv/static/assets/kits.css
+      --load-path=node_modules
     ),
     cd: Path.expand("../assets", __DIR__)
   ]
