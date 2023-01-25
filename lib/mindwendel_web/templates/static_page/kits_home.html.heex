@@ -63,23 +63,29 @@
           </ul>
 
           <%= form_for @changeset, Routes.brainstorming_path(@conn, :create), fn f -> %>
-            <div class="input-group position-relative d-flex flex-wrap align-items-lg-stretch w-100">
+            <div class="input-group position-relative d-flex flex-wrap align-items-lg-stretch">
               <%= text_input f, :name, class: "form-control rounded-start", placeholder: "Gib deine Frage ein!", required: true %>
               <%= submit "Erstellen", class: "btn btn-primary" %>
             </div>
           <% end %>
 
           <%= if @current_user && !Enum.empty?(@current_user.brainstormings) do %>
-            <ul id="mindmaps" class="list-inline pt-4 text-muted lh-sm">
-              <%= for brainstorming <- list_brainstormings_for(@current_user) do %>
-                <li class="my-2">
-                  <%= link brainstorming.name, to: Routes.brainstorming_show_path(@conn, :show, brainstorming), class: "text-decoration-none text-black-50 text-break" %>
-                  <span class="badge rounded-pill bg-light text-dark text-end">
-                    <%= Timex.format!(brainstorming.inserted_at, "{relative}", :relative) %>
-                  </span>
-                </li>
-              <% end %>
-            </ul>
+            <div class="row pt-4">
+              <div class="col-10">
+                <%= for brainstorming <- list_brainstormings_for(@current_user) do %>
+                  <div class="row">
+                    <div class="col-10 text-truncate text-muted">
+                      <%= link brainstorming.name, to: Routes.brainstorming_show_path(@conn, :show, brainstorming), class: "text-truncate text-decoration-none text-black-50" %>
+                    </div>
+                    <div class="col-2">
+                      <span class="badge rounded-pill bg-light text-dark">
+                        <%= Timex.format!(brainstorming.inserted_at, "{relative}", :relative) %>
+                      </span>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
           <% end %>
         </div>
       </div>
