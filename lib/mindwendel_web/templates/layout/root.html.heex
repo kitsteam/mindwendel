@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover' >
     <%= csrf_meta_tag() %>
     <.live_title>
       <%= assigns[:page_title] || "Mindwendel" %>
@@ -16,7 +16,7 @@
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-white border-bottom mb-2">
       <div class="container">
         <%= link to: "/", class: "navbar-brand mb-0 h1" do %>
-          <img src={ Routes.static_path(@conn, "/images/kits-mindwendel-logo.svg") } class="nav-mindwendel-logo" />
+          <img src={ Routes.static_path(@conn, "/images/kits-mindwendel-logo-blue.svg") } class="nav-mindwendel-logo" />
         <% end %>
 
         <button
