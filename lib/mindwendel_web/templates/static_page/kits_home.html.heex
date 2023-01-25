@@ -48,7 +48,7 @@
 
     <div class="row g-0 h-100">
       <div id="content" class="container w-90 d-flex align-content-center flex-wrap">
-        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="alert alert-secondary" role="alert"><%= get_flash(@conn, :info) %></p>
         <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
         <div id="call-to-action-block">
@@ -70,11 +70,11 @@
           <% end %>
 
           <%= if @current_user && !Enum.empty?(@current_user.brainstormings) do %>
-            <ul id="mindmaps" class="list-inline pt-4 text-muted lh-lg">
+            <ul id="mindmaps" class="list-inline pt-4 text-muted lh-sm">
               <%= for brainstorming <- list_brainstormings_for(@current_user) do %>
-                <li>
-                  <%= link brainstorming.name, to: Routes.brainstorming_show_path(@conn, :show, brainstorming), class: "text-decoration-none text-black-50" %>
-                  <span class="badge rounded-pill bg-light text-dark">
+                <li class="my-2">
+                  <%= link brainstorming.name, to: Routes.brainstorming_show_path(@conn, :show, brainstorming), class: "text-decoration-none text-black-50 text-break" %>
+                  <span class="badge rounded-pill bg-light text-dark text-end">
                     <%= Timex.format!(brainstorming.inserted_at, "{relative}", :relative) %>
                   </span>
                 </li>
