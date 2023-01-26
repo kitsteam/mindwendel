@@ -45,6 +45,10 @@ config :esbuild,
       --target=es2016
       --outdir=../priv/static/assets
       --external:/images/*
+      --external:*.png
+      --external:*.ico
+      --external:*.svg
+      --external:*.webmanifest
       --loader:.woff=file
       --loader:.woff2=file
     ),
