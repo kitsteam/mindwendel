@@ -63,29 +63,25 @@
           </ul>
 
           <%= form_for @changeset, Routes.brainstorming_path(@conn, :create), fn f -> %>
-            <div class="input-group position-relative d-flex flex-wrap align-items-lg-stretch">
+            <div class="input-group position-relative d-flex flex-wrap align-items-lg-stretch w-100">
               <%= text_input f, :name, class: "form-control rounded-start", placeholder: "Gib deine Frage ein!", required: true %>
               <%= submit "Erstellen", class: "btn btn-primary" %>
             </div>
           <% end %>
 
           <%= if @current_user && !Enum.empty?(@current_user.brainstormings) do %>
-            <div class="row pt-4">
-              <div class="col-10">
-                <%= for brainstorming <- list_brainstormings_for(@current_user) do %>
-                  <div class="row">
-                    <div class="col-10 text-truncate text-muted">
-                      <%= link brainstorming.name, to: Routes.brainstorming_show_path(@conn, :show, brainstorming), class: "text-truncate text-decoration-none text-black-50" %>
-                    </div>
-                    <div class="col-2">
-                      <span class="badge rounded-pill bg-light text-dark">
-                        <%= Timex.format!(brainstorming.inserted_at, "{relative}", :relative) %>
-                      </span>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            </div>
+          <h5 class="mt-4">Letzte Brainstormings</h5>
+            <ul id="mindmaps" class="list-inline text-dark lh-sm">
+              <%= for brainstorming <- list_brainstormings_for(@current_user) do %>
+                <li class="mb-3">
+                  <%= link brainstorming.name, to: Routes.brainstorming_show_path(@conn, :show, brainstorming), class: "text-decoration-none text-break" %>
+                  <br/>
+                  <span class="badge rounded-pill bg-light mt-1 text-dark">
+                    <%= Timex.format!(brainstorming.inserted_at, "{relative}", :relative) %>
+                  </span>
+                </li>
+              <% end %>
+            </ul>
           <% end %>
         </div>
       </div>
