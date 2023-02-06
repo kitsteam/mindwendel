@@ -69,6 +69,11 @@
             </div>
           <% end %>
 
+          <p class="form-text text-muted mt-3">
+            Dieses Tool darf nur in Bildungskontexten genutzt werden. Die Eingabe personenbezogener Daten ist
+            nicht gestattet.
+          </p>
+
           <%= if @current_user && !Enum.empty?(@current_user.brainstormings) do %>
           <h5 class="mt-4">Letzte Brainstormings</h5>
             <ul id="mindmaps" class="list-inline text-dark lh-sm">
