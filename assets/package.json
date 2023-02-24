@@ -3,9 +3,14 @@
   "description": " ",
   "license": "MIT",
   "dependencies": {
+<<<<<<< HEAD
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.2",
+=======
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.9.1",
+>>>>>>> df3c962 ([Bug] Fixes issue with the dropdown in the menu bar that shows old brainstormings (#26))
     "clipboard": "^2.0.10",
     "nprogress": "^0.2.0",
     "phoenix": "file:../deps/phoenix",
