@@ -28,7 +28,7 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
-
+      
       - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
         if: steps.cache.outputs.cache-hit != 'true'
@@ -78,18 +78,8 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
-<<<<<<< HEAD
-<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
-=======
-
-=======
-      
->>>>>>> 93a074f (refactor: Cleanup afer rebase)
-      # install hex:
-      - run: mix local.hex --force && mix local.rebar --force
->>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
       - run: mix compile
       - run: mix ecto.create
       - run: mix ecto.migrate
@@ -110,19 +100,9 @@ jobs:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
-<<<<<<< HEAD
-<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
       
-=======
-
-=======
-      
->>>>>>> 93a074f (refactor: Cleanup afer rebase)
-      # install hex:
-      - run: mix local.hex --force && mix local.rebar --force
->>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
       - run: mix format --check-formatted
   
   check_mix_gettext_extract_up_to_date:
@@ -153,30 +133,14 @@ jobs:
 
     steps:
       - name: Check out repository code
-<<<<<<< HEAD
         uses: actions/checkout@v3
         
       - uses: actions/cache@v3
-=======
-        uses: actions/checkout@v2
-        
-      - uses: actions/cache@v2
->>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
         with:
           path: deps
           key: ${{ runner.os }}-mix-v4-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-mix-v4
-<<<<<<< HEAD
-<<<<<<< HEAD
       
       - run: mix do local.hex --force, local.rebar --force
       - run: mix compile
-=======
-
-=======
-      
->>>>>>> 93a074f (refactor: Cleanup afer rebase)
-      # install hex:
-      - run: mix local.hex --force && mix local.rebar --force
->>>>>>> 784c92d (Fetch and merge with mindwendel base repository (#17))
       - run: mix sobelow --config
