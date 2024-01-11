@@ -42,9 +42,9 @@ defmodule Mindwendel.MixProject do
     [
       {:phoenix, "1.6.16"},
       {:phoenix_ecto, "4.4.3"},
-      {:phoenix_html, "3.2.0"},
+      {:phoenix_html, "3.3.3"},
       {:phoenix_live_dashboard, "0.7.2"},
-      {:phoenix_live_reload, "1.3.3", only: :dev},
+      {:phoenix_live_reload, "1.4.1", only: :dev},
       {:phoenix_live_view, "0.18.3"},
       {:esbuild, "0.5.0", runtime: Mix.env() == :dev},
       {:dart_sass, "0.5.1", runtime: Mix.env() == :dev},
@@ -61,7 +61,8 @@ defmodule Mindwendel.MixProject do
       {:sobelow, "0.13.0", only: :dev},
       {:telemetry_metrics, "0.6.1"},
       {:telemetry_poller, "1.0.0"},
-      {:timex, "3.7.11"}
+      {:timex, "3.7.11"},
+      {:logger_json, "5.1.2"}
     ]
   end
 
