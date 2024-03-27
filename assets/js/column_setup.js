@@ -4,10 +4,9 @@
 const leftColumn = document.getElementById("left-column");
 
 function setLeftColumnHeight() {
-  leftColumn?.setAttribute(
-    "style",
-    `height: ${window.innerHeight} px !important`
-  );
+  if (leftColumn) {
+    leftColumn.style.setProperty('height', `${window.innerHeight}px`, 'important')
+  }
 }
 // change the left column size whenever the window is resized
 window.addEventListener("resize", setLeftColumnHeight);
