@@ -9,11 +9,13 @@ defmodule MindwendelWeb.BrainstormingLive.ShowIdeaDeleteTest do
     brainstorming = Factory.insert!(:brainstorming)
     current_user_id = Ecto.UUID.generate()
     user = Factory.insert!(:user, id: current_user_id)
+    lane = Enum.at(brainstorming.lanes, 0)
 
     idea =
       Factory.insert!(:idea, %{
         brainstorming: brainstorming,
-        user_id: current_user_id
+        user_id: current_user_id,
+        lane: lane
       })
 
     %{
@@ -39,7 +41,7 @@ defmodule MindwendelWeb.BrainstormingLive.ShowIdeaDeleteTest do
     {:ok, show_live_view, _html} =
       conn
       |> init_test_session(%{current_user_id: moderating_user.id})
-      |> live(Routes.brainstorming_show_path(conn, :show, brainstorming))
+      |> live(~p"/brainstormings/#{brainstorming.id}")
 
     show_live_view
     |> element(html_selector_button_idea_delete_link())
@@ -54,7 +56,7 @@ defmodule MindwendelWeb.BrainstormingLive.ShowIdeaDeleteTest do
     # {:ok, show_live_view, _html} =
     #   conn
     #   |> init_test_session(%{current_user_id: moderatoring_user.id})
-    #   |> live(Routes.brainstorming_show_path(conn, :show, brainstorming))
+    #   |> live(~p"/brainstormings/#{brainstorming.id}")
 
     # refute show_live_view
     #        |> element(html_selector_button_idea_delete_link())
@@ -66,7 +68,7 @@ defmodule MindwendelWeb.BrainstormingLive.ShowIdeaDeleteTest do
     #   show_live_view
     #   |> form("#idea-form", idea: %{body: new_idea_body})
     #   |> render_submit()
-    #   |> follow_redirect(conn, Routes.brainstorming_show_path(conn, :show, brainstorming))
+    #   |> follow_redirect(conn, ~p"/brainstormings/#{brainstorming.id}")
 
     # assert show_live_view
     #        |> element(".card-body-mindwendel-idea", new_idea_body)
@@ -74,6 +76,6 @@ defmodule MindwendelWeb.BrainstormingLive.ShowIdeaDeleteTest do
   end
 
   defp html_selector_button_idea_delete_link do
-    "a[@title='Delete']"
+    "a[@title='Delete idea']"
   end
 end

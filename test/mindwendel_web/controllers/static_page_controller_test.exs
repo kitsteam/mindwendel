@@ -5,17 +5,17 @@ defmodule MindwendelWeb.StaticPageControllerTest do
 
   describe "home without current_user_id in session" do
     test "contains text", %{conn: conn} do
-      conn = get(conn, Routes.static_page_path(conn, :home))
+      conn = get(conn, ~p"/")
       assert html_response(conn, 200) =~ "mindwendel"
     end
 
     test "sets current_user_id in session", %{conn: conn} do
-      conn = get(conn, Routes.static_page_path(conn, :home))
+      conn = get(conn, ~p"/")
       refute Mindwendel.Services.SessionService.get_current_user_id(conn) == nil
     end
 
     test "does not contain recent brainstormings", %{conn: conn} do
-      conn = get(conn, Routes.static_page_path(conn, :home))
+      conn = get(conn, ~p"/")
       refute html_response(conn, 200) =~ "Your latest brainstorming"
     end
   end
@@ -37,7 +37,7 @@ defmodule MindwendelWeb.StaticPageControllerTest do
           Mindwendel.Services.SessionService.session_key_current_user_id() => user.id
         })
 
-      conn = get(conn, Routes.static_page_path(conn, :home))
+      conn = get(conn, ~p"/")
 
       assert html_response(conn, 200) =~ brainstorming.name
     end
@@ -51,7 +51,7 @@ defmodule MindwendelWeb.StaticPageControllerTest do
           Mindwendel.Services.SessionService.session_key_current_user_id() => user.id
         })
 
-      conn = get(conn, Routes.static_page_path(conn, :home))
+      conn = get(conn, ~p"/")
 
       refute html_response(conn, 200) =~ brainstorming.name
     end
