@@ -84,11 +84,7 @@
     <div class="g-0 d-flex justify-content-end px-3">
       <div class="pt-3">
         <a href="https://kits.blog/tools/">
-          <img
-            src={~p"/images/kits-logo.svg"}
-            class="img-fluid d-block"
-            alt="Kits Logo"
-          />
+          <img src={~p"/images/kits-logo.svg"} class="img-fluid d-block" alt="Kits Logo" />
         </a>
       </div>
     </div>
@@ -139,9 +135,12 @@
             <ul id="mindmaps" class="list-inline text-dark lh-sm">
               <%= for brainstorming <- list_brainstormings_for(@current_user) do %>
                 <li class="mb-3">
-              <.link href={~p"/brainstormings/#{brainstorming.id}"} class="text-decoration-none text-break">
-                <%= brainstorming.name %>
-              </.link>
+                  <.link
+                    href={~p"/brainstormings/#{brainstorming.id}"}
+                    class="text-decoration-none text-break"
+                  >
+                    <%= brainstorming.name %>
+                  </.link>
                   <br />
                   <span class="badge rounded-pill bg-light mt-1 text-dark">
                     <%= Timex.format!(brainstorming.inserted_at, "{relative}", :relative) %>
