@@ -52,47 +52,28 @@ defmodule MindwendelWeb.BrainstormingLive.Show do
   end
 
   @impl true
-  def handle_info({:idea_added, idea}, socket) do
-    lanes = Lanes.get_lanes_for_brainstorming(idea.brainstorming_id)
-    {:noreply, assign(socket, :lanes, lanes)}
-  end
-
-  def handle_info({:idea_removed, idea}, socket) do
-    lanes = Lanes.get_lanes_for_brainstorming(idea.brainstorming_id)
-    {:noreply, assign(socket, :lanes, lanes)}
-  end
-
-  def handle_info({:lane_added, lane}, socket) do
-    lanes = Lanes.get_lanes_for_brainstorming(lane.brainstorming_id)
+  def handle_info({:lane_created, lane}, socket) do
+    lanes = socket.assigns.lanes ++ [lane]
     {:noreply, assign(socket, :lanes, lanes)}
   end
 
   def handle_info({:lane_removed, lane}, socket) do
-    lanes = Lanes.get_lanes_for_brainstorming(lane.brainstorming_id)
+    lanes = Enum.filter(socket.assigns.lanes, fn existing_lane -> existing_lane.id != lane.id end)
     {:noreply, assign(socket, :lanes, lanes)}
   end
 
-  def handle_info({:lane_updated, lane}, socket) do
-    lanes = Lanes.get_lanes_for_brainstorming(lane.brainstorming_id)
+  def handle_info({:lanes_updated, lanes}, socket) do
     {:noreply, assign(socket, :lanes, lanes)}
   end
 
   def handle_info({:brainstorming_updated, brainstorming}, socket) do
-    lanes = Lanes.get_lanes_for_brainstorming(brainstorming.id)
-
-    {
-      :noreply,
-      socket
-      |> assign(:brainstorming, Brainstormings.get_brainstorming!(brainstorming.id))
-      |> assign(:lanes, lanes)
-    }
+    # we do a full reload here as the backdrop of the bootstrap modal otherwise gets stuck on the page
+    # as it seems to be outside of the view component
+    {:noreply, redirect(socket, to: "/brainstormings/#{brainstorming.id}")}
   end
 
-  def handle_info({:idea_updated, idea}, socket) do
-    # another option is to reload the ideas from the db - but this would trigger a new sorting which might confuse the user
-    lanes = Lanes.get_lanes_for_brainstorming(idea.brainstorming_id)
-
-    {:noreply, assign(socket, :lanes, lanes)}
+  def handle_info({:user_updated, user}, socket) do
+    {:noreply, assign(socket, :current_user, user)}
   end
 
   defp apply_action(

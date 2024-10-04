@@ -10,7 +10,7 @@ defmodule Mindwendel.Brainstormings.Lane do
     field :name, :string
     field :position_order, :integer
     belongs_to :brainstorming, Brainstorming, type: :binary_id
-    has_many :ideas, Idea, preload_order: [asc: :position_order]
+    has_many :ideas, Idea, preload_order: [asc: :position_order, asc: :inserted_at]
 
     timestamps()
   end
@@ -29,8 +29,8 @@ defmodule Mindwendel.Brainstormings.Lane do
 
   defp add_position_order_if_missing(
          %Ecto.Changeset{
-           data: %Mindwendel.Brainstormings.Lane{
-             position_order: nil,
+           changes: %{
+             name: _,
              brainstorming_id: brainstorming_id
            }
          } = changeset

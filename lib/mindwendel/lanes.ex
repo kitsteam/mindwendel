@@ -72,7 +72,11 @@ defmodule Mindwendel.Lanes do
   def get_lanes_for_brainstorming(id) do
     lane_query =
       from lane in Lane,
-        where: lane.brainstorming_id == ^id
+        where: lane.brainstorming_id == ^id,
+        order_by: [
+          asc: lane.position_order,
+          asc: lane.inserted_at
+        ]
 
     Repo.all(lane_query)
     |> Repo.preload(
@@ -98,10 +102,13 @@ defmodule Mindwendel.Lanes do
 
   """
   def create_lane(attrs \\ %{}) do
-    %Lane{}
-    |> Lane.changeset(attrs)
-    |> Repo.insert()
-    |> Brainstormings.broadcast(:lane_created)
+    result =
+      %Lane{}
+      |> Lane.changeset(attrs)
+      |> Repo.insert()
+      |> Brainstormings.broadcast(:lane_created)
+
+    result
   end
 
   @doc """
@@ -117,10 +124,13 @@ defmodule Mindwendel.Lanes do
 
   """
   def update_lane(%Lane{} = lane, attrs) do
-    lane
-    |> Lane.changeset(attrs)
-    |> Repo.update()
-    |> Brainstormings.broadcast(:lane_updated)
+    update =
+      lane
+      |> Lane.changeset(attrs)
+      |> Repo.update()
+
+    broadcast_lanes_update(lane.brainstorming_id)
+    update
   end
 
   @doc """
@@ -150,5 +160,10 @@ defmodule Mindwendel.Lanes do
   """
   def change_lane(%Lane{} = lane, attrs \\ %{}) do
     Lane.changeset(lane, attrs)
+  end
+
+  def broadcast_lanes_update(brainstorming_id) do
+    lanes = get_lanes_for_brainstorming(brainstorming_id)
+    Brainstormings.broadcast({:ok, brainstorming_id, lanes}, :lanes_updated)
   end
 end

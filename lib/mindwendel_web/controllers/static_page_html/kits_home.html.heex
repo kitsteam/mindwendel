@@ -113,16 +113,20 @@
             <li class="list-group-item pb-2">Kategorisiere deine Ideen!</li>
           </ul>
 
-          <%= form_for @changeset, ~p"/brainstormings", fn f -> %>
-            <div class="input-group position-relative d-flex flex-wrap align-items-lg-stretch w-100">
-              <%= text_input(f, :name,
-                class: "form-control rounded-start",
-                placeholder: "Gib deine Frage ein!",
-                required: true
-              ) %>
-              <%= submit("Erstellen", class: "btn btn-primary") %>
-            </div>
-          <% end %>
+          <.simple_form for={@form} action={~p"/brainstormings"} method="post">
+          <div class="input-group">
+            <.input
+              field={@form[:name]}
+              placeholder={gettext("How might we ...")}
+              form_group_wrapper={false}
+              autofocus
+              required
+            />
+            <.button type="submit" class="btn btn-primary">
+              <%= gettext("Create!") %>
+            </.button>
+          </div>
+        </.simple_form>
 
           <p class="form-text text-muted mt-3">
             Dieses Tool darf nur in Bildungskontexten genutzt werden. Die Eingabe sensibler Daten ist zu vermeiden.

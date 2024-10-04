@@ -37,7 +37,8 @@ defmodule MindwendelWeb.IdeaLive.FormComponent do
         {:ok, _idea} ->
           {:noreply,
            socket
-           |> put_flash(:info, gettext("Idea created updated"))
+           |> push_event("submit-success", %{to: "#idea-modal"})
+           |> put_flash(:info, gettext("Idea updated"))
            |> push_patch(to: ~p"/brainstormings/#{brainstorming.id}")}
 
         {:error, %Ecto.Changeset{} = changeset} ->
@@ -47,14 +48,18 @@ defmodule MindwendelWeb.IdeaLive.FormComponent do
   end
 
   defp save_idea(socket, :new, idea_params) do
-    Mindwendel.Accounts.update_user(socket.assigns.current_user, %{
-      username: idea_params["username"]
-    })
-
     case Ideas.create_idea(Map.put(idea_params, "user_id", socket.assigns.current_user.id)) do
       {:ok, _idea} ->
+        {:ok, user} =
+          Mindwendel.Accounts.update_user(socket.assigns.current_user, %{
+            username: idea_params["username"]
+          })
+
+        send(self(), {:user_updated, user})
+
         {:noreply,
          socket
+         |> push_event("submit-success", %{to: "#idea-modal"})
          |> put_flash(:info, gettext("Idea created successfully"))
          |> push_patch(to: ~p"/brainstormings/#{idea_params["brainstorming_id"]}")}
 
