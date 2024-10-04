@@ -114,19 +114,19 @@
           </ul>
 
           <.simple_form for={@form} action={~p"/brainstormings"} method="post">
-          <div class="input-group">
-            <.input
-              field={@form[:name]}
-              placeholder={gettext("How might we ...")}
-              form_group_wrapper={false}
-              autofocus
-              required
-            />
-            <.button type="submit" class="btn btn-primary">
-              <%= gettext("Create!") %>
-            </.button>
-          </div>
-        </.simple_form>
+            <div class="input-group">
+              <.input
+                field={@form[:name]}
+                placeholder={gettext("How might we ...")}
+                form_group_wrapper={false}
+                autofocus
+                required
+              />
+              <.button type="submit" class="btn btn-primary">
+                <%= gettext("Create!") %>
+              </.button>
+            </div>
+          </.simple_form>
 
           <p class="form-text text-muted mt-3">
             Dieses Tool darf nur in Bildungskontexten genutzt werden. Die Eingabe sensibler Daten ist zu vermeiden.
@@ -135,7 +135,7 @@
           </p>
 
           <%= if @current_user && !Enum.empty?(@current_user.brainstormings) do %>
-            <h5 class="mt-4">Letzte Brainstormings</h5>
+            <h5 class="mt-4"><%= gettext("Your latest brainstormings") %></h5>
             <ul id="mindmaps" class="list-inline text-dark lh-sm">
               <%= for brainstorming <- list_brainstormings_for(@current_user) do %>
                 <li class="mb-3">
