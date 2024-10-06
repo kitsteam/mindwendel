@@ -181,6 +181,7 @@ msgid "Export"
 msgstr ""
 
 #: lib/mindwendel_web/controllers/static_page_html/home.html.heex:44
+#: lib/mindwendel_web/controllers/static_page_html/kits_home.html.heex:138
 #, elixir-autogen
 msgid "Your latest brainstormings"
 msgstr ""
