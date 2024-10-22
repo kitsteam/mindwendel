@@ -24,13 +24,15 @@ Create a challenge. Ready? Brainstorm. mindwendel helps you to easily brainstorm
 ## Features
 
 - 5 minute setup (It is not a joke)
-- Anonymously invite people to your brainstormings - no registration needed. Usernames are optional.
-- Easily create and upvote ideas, with live updates from your companions.
-- Cluster your ideas with custom labels
+- Anonymously invite people to your brainstormings - no registration needed. Usernames are optional
+- Easily create and upvote ideas, with live updates from your companions
+- Cluster or filter your ideas with custom labels
 - Preview of links to ease URL sharing
+- Add file attachments
+- Add lanes, use drag & drop to order ideas
 - Export your generated ideas to html or csv (currently comma separated)
 - German & English Translation files
-- By default, brainstormings are deleted after 30 days to ensure GDPR compliancy.
+- By default, brainstormings are deleted after 30 days to ensure GDPR compliancy
 
 ![](docs/screenshot.png)
 ![](docs/screenshot2.png)
@@ -120,6 +122,14 @@ mindwendel is built on top of:
 
 - Go to http://localhost:4000/
 
+#### Localization
+
+You can extract new strings to translate by running:
+
+```bash
+mix gettext.extract --merge
+```
+
 ### Testing
 
 - Startup docker compose setup
@@ -191,15 +201,20 @@ We are using Elixir's built-in formatter.
 
 ## Environment Variables
 
+### File Storage
+Attached files are stored by default on the server in an upload directory. For a production setup, it is recommended to use a s3 compatible object storage.
+
+```
+DOCKER_COMPOSE_APP_MW_FEATURE_STORAGE_PROVIDER=s3
+DOCKER_COMPOSE_APP_OBJECT_STORAGE_USER=...
+DOCKER_COMPOSE_APP_OBJECT_STORAGE_PASSWORD=...
+```
+
+There is an example given inside the `docker-compose.yml` with a docker compose minio setup.
+
 ### Localization
 
 Currently, there are two language files available, german ("de") and english ("en"). To set the default_locale, you can set `MW_DEFAULT_LOCALE`. The default is english.
-
-You can extract new strings to translate by running:
-
-```bash
-mix gettext.extract --merge
-```
 
 ## Testimonials
 
