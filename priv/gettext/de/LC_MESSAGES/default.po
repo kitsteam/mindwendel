@@ -322,7 +322,7 @@ msgstr "Nutzern das Verschieben und Sortieren von Ideen erlauben"
 msgid "Back"
 msgstr "Zurück"
 
-#: lib/mindwendel_web/components/core_components.ex:522
+#: lib/mindwendel_web/components/core_components.ex:527
 #, elixir-autogen, elixir-format
 msgid "Actions"
 msgstr ""
