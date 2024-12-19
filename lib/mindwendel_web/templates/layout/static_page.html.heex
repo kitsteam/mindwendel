@@ -9,7 +9,7 @@
     />
     <meta name="csrf-token" content={get_csrf_token()} />
     <.live_title>
-      <%= assigns[:page_title] || "Mindwendel" %>
+      {assigns[:page_title] || "Mindwendel"}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
@@ -24,7 +24,7 @@
     <meta name="theme-color" content="#ffffff" />
   </head>
 
-  <body class="d-flex h-100 bg-black">
-    <%= @inner_content %>
+  <body class="h-100 bg-white">
+    {@inner_content}
   </body>
 </html>

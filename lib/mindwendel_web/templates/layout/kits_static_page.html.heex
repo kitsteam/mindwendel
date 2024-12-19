@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -9,7 +9,7 @@
     />
     <meta name="csrf-token" content={get_csrf_token()} />
     <.live_title>
-      <%= assigns[:page_title] || "mindwendel" %>
+      {assigns[:page_title] || "mindwendel"}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/kits.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
@@ -25,6 +25,6 @@
   </head>
 
   <body>
-    <%= @inner_content %>
+    {@inner_content}
   </body>
 </html>
