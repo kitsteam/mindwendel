@@ -1,0 +1,177 @@
+<div class="order-1 h-100">
+  <!-- Footer Block Start -->
+  <div class="d-lg-none">
+    <div id="static-footer" class="fixed-bottom bg-gradient bg-gradient-primary">
+      <div class="row">
+        <div class="d-flex align-items-center">
+          <div class="col-1 col-sm-2">
+            <.link href={~p"/"} title="mindwendel">
+              <img
+                id="static-footer-logo"
+                src={~p"/images/kits-mindwendel-logo-white.svg"}
+                class="img-fluid d-block"
+                width="80"
+                alt="mindwendel Logo"
+              />
+            </.link>
+          </div>
+          <div class="col-11 col-sm-10 d-flex justify-content-end">
+            <a
+              href="https://github.com/kitsteam/mindwendel"
+              class="text-white px-lg-2 p-2 text-decoration-none"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://kits.blog/impressum/"
+              class="text-white px-lg-2 p-2 text-decoration-none"
+            >
+              Impressum
+            </a>
+            <a
+              href="https://kits.blog/datenschutz/#mindwendel"
+              class="text-white p-2 text-decoration-none"
+            >
+              Datenschutz
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer Block End -->
+
+  <!-- Left Block Start -->
+  <div class="row h-100">
+    <div
+      id="left-column"
+      class="d-none d-lg-flex col bg-gradient bg-gradient-primary align-items-center justify-content-center h-100"
+    >
+      <div></div>
+      <div>
+        <.link href={~p"/"} title="mindwendel">
+          <img
+            src={~p"/images/kits-mindwendel-logo-white.svg"}
+            class="img-fluid d-block"
+            width="400px"
+            alt="mindwendel Logo"
+          />
+        </.link>
+      </div>
+      <div id="footer-links" class="position-absolute bottom-0 left-0 align-items-center mb-1">
+        <a
+          href="https://github.com/kitsteam/mindwendel"
+          class="text-white px-lg-2 p-2 text-decoration-none"
+        >
+          GitHub
+        </a>
+        <a href="https://kits.blog/impressum/" class="text-white px-lg-2 p-2 text-decoration-none">
+          Impressum
+        </a>
+        <a
+          href="https://kits.blog/datenschutz/#mindwendel"
+          class="text-white p-2 text-decoration-none"
+        >
+          Datenschutz
+        </a>
+      </div>
+    </div>
+    <!-- End Left Block -->
+
+  <!-- Right Block Start -->
+    <div class="col align-items-stretch justify-content-between h-100">
+      <div class="g-0 d-flex justify-content-end px-3">
+        <div class="pt-3">
+          <a href="https://kits.blog/tools/">
+            <img src={~p"/images/kits-logo.svg"} class="img-fluid d-block" alt="Kits Logo" />
+          </a>
+        </div>
+      </div>
+
+      <div class="row g-0 h-100">
+        <div
+          id="content"
+          class="container w-90 d-flex align-content-lg-center flex-wrap"
+          phx-hook="TransferLocalStorageBrainstormings"
+        >
+          <div id="call-to-action-block">
+            <%= if Phoenix.Flash.get(@flash, :info) do %>
+              <p
+                id="flash-info"
+                class="alert alert-secondary"
+                role="alert"
+                phx-hook="RemoveMissingBrainstorming"
+                data-brainstorming-id={Phoenix.Flash.get(@flash, :missing_brainstorming_id)}
+              >
+                {Phoenix.Flash.get(@flash, :info)}
+              </p>
+            <% end %>
+            <%= if Phoenix.Flash.get(@flash, :error) do %>
+              <p
+                id="flash-error"
+                class="alert alert-danger"
+                role="alert"
+                phx-hook="RemoveMissingBrainstorming"
+                data-brainstorming-id={Phoenix.Flash.get(@flash, :missing_brainstorming_id)}
+              >
+                {Phoenix.Flash.get(@flash, :error)}
+              </p>
+            <% end %>
+
+            <h1 class="fw-bold">
+              <.link href={~p"/"} class="text-decoration-none" title="mindwendel">
+                mindwendel
+              </.link>
+            </h1>
+
+            <ul class="list-group list-unstyled mb-3">
+              <li class="list-group-item pb-2">Erstelle Brainstormings!</li>
+              <li class="list-group-item pb-2">Lade andere ein!</li>
+              <li class="list-group-item pb-2">Kategorisiere deine Ideen!</li>
+            </ul>
+
+            <.simple_form for={@form} action={~p"/brainstormings"} method="post">
+              <div class="input-group">
+                <.input
+                  field={@form[:name]}
+                  placeholder={gettext("How might we ...")}
+                  form_group_wrapper={false}
+                  autofocus
+                  required
+                />
+                <.button type="submit" class="btn btn-primary">
+                  {gettext("Create!")}
+                </.button>
+              </div>
+            </.simple_form>
+
+            <p class="form-text text-muted mt-3">
+              Dieses Tool darf nur in Bildungskontexten genutzt werden. Die Eingabe sensibler Daten ist zu vermeiden.
+              <br /><br />
+              Achtung: Brainstormings werden 24 Monate nach dem letzten Zugriff gelöscht!
+            </p>
+
+            <%= if !Enum.empty?(@brainstormings_stored) do %>
+              <h5 class="mt-4">{gettext("Your latest brainstormings")}</h5>
+              <ul id="mindmaps" class="list-inline text-dark lh-sm">
+                <%= for brainstorming <- @brainstormings_stored do %>
+                  <li class="mb-3 ">
+                    <.link href={
+                      ~p"/brainstormings/#{brainstorming["id"]}/##{brainstorming["admin_url_id"] || ""}"
+                    }>
+                      {brainstorming["name"]}
+                    </.link>
+                    <span class="badge rounded-pill bg-light mt-1 text-dark">
+                      {Timex.from_now(brainstorming["last_accessed_at"])}
+                    </span>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Right Block End -->
+</div>

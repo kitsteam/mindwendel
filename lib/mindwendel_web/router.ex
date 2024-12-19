@@ -38,11 +38,16 @@ defmodule MindwendelWeb.Router do
   scope "/", MindwendelWeb do
     pipe_through(:browser)
 
-    get("/", StaticPageController, :home)
     get("/files/:id", FileController, :get_file)
 
     get("/legal", StaticPageController, :legal)
     get("/privacy", StaticPageController, :privacy)
+
+    live_session :default,
+      root_layout: {MindwendelWeb.Layouts, :kits_static_page},
+      layout: {MindwendelWeb.Layouts, :kits_app_static} do
+      live "/", StartLive.KitsHome, :home
+    end
 
     scope "/admin", Admin, as: :admin do
       delete("/brainstormings/:id", BrainstormingController, :delete)
