@@ -38,5 +38,19 @@ config :timex, :default_locale, "en"
 
 config :mindwendel, Oban, repo: Mindwendel.Repo, testing: :inline
 
-# Allow private IPs for URL preview in tests
-config :mindwendel, :allow_private_ips, true
+# URL previews in tests may only connect to loopback (Bypass listens on localhost),
+# so tests never send requests to real sites
+config :mindwendel, Mindwendel.UrlPreview,
+  allowed_ips: [{127, 0, 0, 1}, {0, 0, 0, 0, 0, 0, 0, 1}],
+  allow_public_ips: false,
+  # Only localhost resolves, so tests never send DNS queries
+  resolver: {Mindwendel.UrlPreviewTestResolver, :resolve}
+
+# The limit is per host and all Bypass servers listen on localhost, so it is
+# high enough for all tests. A long window, so the tests do not depend on the time.
+config :mindwendel, MindwendelWeb.LinkPreviewController,
+  rate_limit: 100,
+  rate_limit_window_ms: :timer.hours(1)
+
+# Don't check IANA for new timezone data during tests
+config :tzdata, :autoupdate, :disabled
