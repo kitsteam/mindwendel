@@ -13,6 +13,8 @@ defmodule Mindwendel.Ideas do
 
   require Logger
 
+  @idea_preloads [:idea_labels, :files, :link, :comments]
+
   @doc """
   Returns the max position order for either ideas and given labels or a lane
 
@@ -227,6 +229,9 @@ defmodule Mindwendel.Ideas do
   @doc """
   Returns the update result of changing the order of ideas by a user inside a brainstorming.
 
+  The idea and the target lane must both belong to the given brainstorming. Otherwise
+  `{:error, :not_found}` or `{:error, changeset}` is returned and nothing is changed.
+
   ## Examples
 
       iex> update_ideas_for_brainstorming_by_user_move(3, 1, 1, 3)
@@ -240,8 +245,20 @@ defmodule Mindwendel.Ideas do
         new_position,
         old_position
       ) do
-    get_idea!(idea_id) |> update_idea(%{position_order: new_position, lane_id: lane_id})
+    with %Idea{} = idea <- get_idea(idea_id, brainstorming_id),
+         {:ok, _idea} <-
+           idea
+           |> Idea.position_changeset(%{position_order: new_position, lane_id: lane_id})
+           |> Repo.update() do
+      reorder_ideas_in_lane(brainstorming_id, lane_id, new_position, old_position)
+      Lanes.broadcast_lanes_update(brainstorming_id)
+    else
+      nil -> {:error, :not_found}
+      {:error, _changeset} = error -> error
+    end
+  end
 
+  defp reorder_ideas_in_lane(brainstorming_id, lane_id, new_position, old_position) do
     # depending on moving a card bottom up or up to bottom, we need to correct the ordering
     order =
       if new_position <= old_position,
@@ -265,8 +282,6 @@ defmodule Mindwendel.Ideas do
       update: [set: [position_order: idea_ranks.idea_rank]]
     )
     |> Repo.update_all([])
-
-    Lanes.broadcast_lanes_update(brainstorming_id)
   end
 
   @doc """
@@ -284,7 +299,52 @@ defmodule Mindwendel.Ideas do
 
   """
   def get_idea!(id),
-    do: Repo.get!(Idea, id) |> Repo.preload([:idea_labels, :files, :link, :comments])
+    do: Repo.get!(Idea, id) |> Repo.preload(@idea_preloads)
+
+  @doc """
+  Gets a single idea belonging to the given brainstorming.
+
+  Use this function whenever the id originates from user input (URL or event params)
+  to make sure that ideas of other brainstormings cannot be accessed.
+
+  Raises `Ecto.NoResultsError` if the Idea does not exist within the brainstorming.
+
+  ## Examples
+
+      iex> get_idea!(idea_id, brainstorming_id)
+      %Idea{}
+
+      iex> get_idea!(idea_id_of_other_brainstorming, brainstorming_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_idea!(id, brainstorming_id) do
+    Idea
+    |> where(brainstorming_id: ^brainstorming_id)
+    |> Repo.get!(id)
+    |> Repo.preload(@idea_preloads)
+  end
+
+  @doc """
+  Gets a single idea belonging to the given brainstorming.
+
+  Returns `nil` if the Idea does not exist within the brainstorming.
+
+  ## Examples
+
+      iex> get_idea(idea_id, brainstorming_id)
+      %Idea{}
+
+      iex> get_idea(idea_id_of_other_brainstorming, brainstorming_id)
+      nil
+
+  """
+  def get_idea(id, brainstorming_id) do
+    case Repo.get_by(Idea, id: id, brainstorming_id: brainstorming_id) do
+      nil -> nil
+      idea -> Repo.preload(idea, @idea_preloads)
+    end
+  end
 
   @doc """
   Creates a idea.
@@ -300,7 +360,7 @@ defmodule Mindwendel.Ideas do
   """
   def create_idea(attrs \\ %{}) do
     %Idea{}
-    |> Idea.changeset(attrs)
+    |> Idea.create_changeset(attrs)
     |> Repo.insert()
     |> case do
       {:ok, idea} ->
@@ -392,7 +452,7 @@ defmodule Mindwendel.Ideas do
   """
   def increment_comment_count(idea_id) do
     idea = Repo.get!(Idea, idea_id)
-    changeset = Idea.changeset(idea, %{comments_count: idea.comments_count + 1})
+    changeset = Ecto.Changeset.change(idea, comments_count: idea.comments_count + 1)
     Repo.update(changeset)
   end
 
@@ -418,7 +478,7 @@ defmodule Mindwendel.Ideas do
         0
       end
 
-    changeset = Idea.changeset(idea, %{comments_count: new_comments_count})
+    changeset = Ecto.Changeset.change(idea, comments_count: new_comments_count)
     Repo.update(changeset)
   end
 

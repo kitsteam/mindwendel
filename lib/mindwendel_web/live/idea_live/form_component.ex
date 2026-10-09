@@ -45,22 +45,27 @@ defmodule MindwendelWeb.IdeaLive.FormComponent do
   end
 
   def handle_event("delete_attachment", %{"id" => id}, socket) do
-    %{current_user: current_user, brainstorming_id: brainstorming_id, idea: idea} = socket.assigns
+    %{current_user: current_user, idea: idea} = socket.assigns
 
-    if has_moderating_or_ownership_permission(brainstorming_id, idea, current_user) do
-      attachment = Attachments.get_attached_file(id)
-      Attachments.delete_attached_file(attachment)
+    if has_moderating_or_ownership_permission(idea.brainstorming_id, idea, current_user) do
+      case Attachments.get_attached_file(id) do
+        %{idea_id: idea_id} = attachment when idea_id == idea.id ->
+          Attachments.delete_attached_file(attachment)
+
+        _ ->
+          nil
+      end
     end
 
     {:noreply, assign(socket, form: to_form(Ideas.change_idea(idea)))}
   end
 
   defp save_idea(socket, :update, idea_params) do
-    idea = Ideas.get_idea!(idea_params["id"])
-
     %{current_user: current_user, brainstorming_id: brainstorming_id} = socket.assigns
+    # Reload the idea (within the mounted brainstorming) to get its current attachments.
+    idea = Ideas.get_idea!(socket.assigns.idea.id, brainstorming_id)
 
-    if has_moderating_or_ownership_permission(brainstorming_id, idea, current_user) do
+    if has_moderating_or_ownership_permission(idea.brainstorming_id, idea, current_user) do
       tmp_attachments = prepare_attachments(socket)
 
       idea_params_merged =
@@ -76,7 +81,7 @@ defmodule MindwendelWeb.IdeaLive.FormComponent do
           {:noreply,
            socket
            |> put_flash(:info, gettext("Idea updated"))
-           |> push_patch(to: ~p"/brainstormings/#{brainstorming_id}")}
+           |> push_patch(to: ~p"/brainstormings/#{idea.brainstorming_id}")}
 
         {:error, %Ecto.Changeset{} = changeset} ->
           remove_tmp_attachments(tmp_attachments)
@@ -88,17 +93,22 @@ defmodule MindwendelWeb.IdeaLive.FormComponent do
   end
 
   defp save_idea(socket, :new, idea_params) do
+    # The brainstorming and lane are set server-side when the new idea is built
+    # in the LiveView, never taken from the submitted params.
+    %{idea: %{brainstorming_id: brainstorming_id, lane_id: lane_id}} = socket.assigns
     tmp_attachments = prepare_attachments(socket)
 
     # This is a workaround to get the filtered labels for the idea without passing
     # them as a parameter to the form component. Passing the brainstorming or filter
     # labels directly triggers a re-render of the form component when changing the
     # filter labels and results in a stuck bootstrap modal.
-    brainstorming = Brainstormings.get_bare_brainstorming!(socket.assigns.brainstorming_id)
+    brainstorming = Brainstormings.get_bare_brainstorming!(brainstorming_id)
     filtered_labels = brainstorming.filter_labels_ids
 
     idea_params_merged =
       idea_params
+      |> Map.put("brainstorming_id", brainstorming_id)
+      |> Map.put("lane_id", lane_id)
       |> Map.put("user_id", socket.assigns.current_user.id)
       |> Map.put(
         "idea_labels",
@@ -114,7 +124,7 @@ defmodule MindwendelWeb.IdeaLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, gettext("Idea created successfully"))
-         |> push_patch(to: ~p"/brainstormings/#{idea_params_merged["brainstorming_id"]}")}
+         |> push_patch(to: ~p"/brainstormings/#{brainstorming_id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         remove_tmp_attachments(tmp_attachments)
